@@ -55,7 +55,7 @@ def command_L(dir, ltr_command,xtr_input):
         if ltr_command == "-e":
             # e - output only files that match a given extension
             for path in directory.iterdir():
-                if path.suffix == xtr_input:
+                if path.suffix == "." + xtr_input:
                     output += str(path)
     return output
 
