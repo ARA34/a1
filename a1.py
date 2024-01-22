@@ -20,9 +20,9 @@ def recur_dir_s(dir, given_name):
     for path in directory.iterdir():
         if not path.is_dir():
             if path.name == given_name:
-                content += path
+                content += str(path)
         else:
-            content += recur_dir_s(path)
+            content += recur_dir_s(path, given_name)
     return content
 
 def command_L(dir, ltr_command,xtr_input):
@@ -51,7 +51,7 @@ def command_L(dir, ltr_command,xtr_input):
     else:
         if ltr_command == "-s":
             # s - output only files that match a given file name
-            output = recur_dir_s(directory,xtr_input)
+            output = recur_dir_s(directory, xtr_input)
         if ltr_command == "-e":
             # e - output only files that match a given extension
             for path in directory.iterdir():
@@ -72,7 +72,6 @@ def main():
 
     print_start_options()
     user_input = input().split()
-    # looking for inputs that have - in them to seperate them into a list and parse later
 
     command_input = user_input[0]
     
@@ -94,6 +93,7 @@ def main():
         if command_input == "L":
             print(command_L(directory_input, letter_command, extra_input))
         user_input = input().split()
+        command_input = user_input[0]
 
 
 if __name__ == "__main__":
