@@ -1,18 +1,34 @@
 from pathlib import Path
-import time
 
-# /Users/alexra/Documents/UCI_Winter_2023/ICS_32
+# /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
 
-def recur_dir_r(dir):
+
+def recur_dir_r(dir,usr_input = ""):
     directory = Path(dir)
     content = ""
+    first_files = ""
     for path in directory.iterdir():
         if not path.is_dir():
-            content += str(path) + "\n"
+            if usr_input != "":
+                first_files += str(path) + "\n"
+            else:
+                content += str(path) + "\n"
         else:
             content += str(path) + "\n"
             content += recur_dir_r(path)
-    return content
+    return first_files + content
+
+
+# def recur_dir_r(dir):
+#     directory = Path(dir)
+#     content = []
+#     for path in directory.iterdir():
+#         if not path.is_dir():
+#             content.append(str(path))
+#         else:
+#             content.append([str(path), recur_dir_r(path)])
+#     return content
+
 
 def recur_dir_s(dir, given_name):
     directory = Path(dir)
@@ -28,11 +44,15 @@ def recur_dir_s(dir, given_name):
 def command_L(dir, ltr_command,xtr_input):
     print("Options of the 'L' command:\n\n\t-r Output directory content recursively.\n\t-f Output only files, excluding directories in the results.\n\t-s Output only files that match a given file name.\n\t-e Output only files that match a given file extension.\n")
     output = ""
+    global file_number
+    file_number = 0 
 
     directory = Path(dir)
     dir_content = []
     for path in directory.iterdir():
         dir_content.append(path.name)
+        if path.is_file():
+            file_number += 1
 
     if ltr_command == "" and xtr_input == "":
         # if ltr command and xtra_input are empty
@@ -41,7 +61,10 @@ def command_L(dir, ltr_command,xtr_input):
     elif xtr_input == "":
         if ltr_command == "-r":
             # r - output directory contents recursively
-            output = recur_dir_r(directory)
+            output = recur_dir_r(directory,"1")
+            print(output)
+            
+
             
         if ltr_command == "-f":
             # f - output only files(no folders)
