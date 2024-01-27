@@ -6,6 +6,9 @@ and outputs a filtered list of files and directories on the terminal determined 
 
 Program Command
     L - List the contents of the user specified directory.
+    C - Create a new file in specified directory.
+    D - Delete the file.
+    R - Read the contents of the file.
     Q - Quit the program.
 
 Options of the 'L' command
