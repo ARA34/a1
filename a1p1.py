@@ -65,7 +65,7 @@ def command_L(dir: Path, ltr_command, xtr_input):
 
 def command_C(directory: Path, ltr_input, filename):
     print("Options of the 'C' command:")
-    print("\t-n Input a filename")
+    print("\t-n Input a filename\n")
     if ltr_input != "-n":
         print("incorrect input. Try again.")
         return
@@ -75,16 +75,21 @@ def command_C(directory: Path, ltr_input, filename):
     return str(file)
 
 def command_D(file_dir: Path):
-    if file_dir.exists():
+    if file_dir.exists() and file_dir.suffix == ".dsu":
         str_file = str(file_dir)
         file_dir.unlink()
-        return str_file + " DELETED"
+        print(str_file + " DELETED")
     else:
         print("ERROR")
-        return
 
 def command_R(file_dir: Path):
-    pass
+    if file_dir.suffix != ".dsu":
+        print("ERROR")
+    elif len(file_dir.read_text()) != 0:
+        print(str(file_dir))
+        print(file_dir.read_text())
+    else:
+        print("EMPTY")
 
 def print_start_options():
     print("Welcome to a1 file management tool!")
@@ -124,14 +129,18 @@ def main():
             if len(user_input) != 2:
                 print("Inufficient inputs recieved.")
             else:
-                print(command_D(directory_path))
+                command_D(directory_path)
         elif command_input == "R":
-            pass # read the contents of a file
+            if len(user_input) != 2:
+                print("Inufficient inputs recieved.")
+            else:
+                command_R(directory_path)
 
         print()
         print_start_options()
         user_input = input().split()
         command_input = user_input[0]
+        print()
 
 
 if __name__ == "__main__":
