@@ -1,28 +1,10 @@
 from pathlib import Path
-import re
 # /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
-# L /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder -r -f
-
-
-def recur_dir_r(directory: Path, usr_input = ""):
-    content = ""
-    first_files = ""
-    for path in directory.iterdir():
-        if not path.is_dir():
-            if usr_input != "":
-                first_files += str(path) + "\n"
-            else:
-                content += str(path) + "\n"
-        else:
-            content += str(path) + "\n"
-            content += recur_dir_r(path)
-    return first_files + content
-
+# L /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
         
 def recur_dir_r_3(directory: Path):
     paths = []
 
-    first_files = []
     for path in directory.iterdir():
         if path.is_file():
             paths.append(path)
@@ -50,16 +32,8 @@ def recur_dir_s(directory: Path, given_name):
 
 
 def command_L(dir: Path, ltr_command, xtr_input):
-    # print("Options of the 'L' command:")
-    # print("\t-r Output directory content recursively.")
-    # print("\t-f Output only files, excluding directories in the results.")
-    # print("\t-s Output only files that match a given file name.")
-    # print("\t-e Output only files that match a given file extension.\n")
     output = ""
-
     directory = dir
-
-
     dir_content = []
     for path in directory.iterdir():
         dir_content.append(path)
@@ -93,8 +67,6 @@ def command_L(dir: Path, ltr_command, xtr_input):
 
 
 def command_C(directory: Path, ltr_input, filename):
-    print("Options of the 'C' command:")
-    print("\t-n Input a filename\n")
     if ltr_input != "-n":
         print("incorrect input. Try again.")
         return
@@ -132,24 +104,16 @@ def print_options():
     print("Q - Quit the program.")
 
 def parse_input(input:str):
-    # can't split by whitespace because of folders that have white spaces
-    # C /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder -n something
-    
     command_letter = input[0]
-    
     allowed_sub_letters  = ["-r","-f","-s","-e","-n"]
-    # Letter command, directory, extra things
     rest_input = input[2:]
     directory_input = ""
     small_input = ""
     extra_input = ""
 
-    
-
     some_str = rest_input
 
     input_lst = some_str.split()
-
 
     for sub_letter in allowed_sub_letters:
         if sub_letter in input_lst:
@@ -171,6 +135,7 @@ def parse_input(input:str):
         
 
 def main():
+    # did not have time to implement the multiple commands input
     usr_input = input()
     usr_input_lst = parse_input(usr_input)
     command_input = usr_input_lst[0] 
@@ -178,7 +143,7 @@ def main():
     small_input = usr_input_lst[2]
     extra_input = usr_input_lst[3]
 
-    allowed_sub_letters  = ["-r","-f","-s","-e","-n"]
+    #allowed_sub_letters  = ["-r","-f","-s","-e","-n"]
 
     while command_input != "Q":
         directory_path = Path(directory_str)
@@ -203,11 +168,7 @@ def main():
         elif command_input == "R":
             print(command_R(directory_path))
 
-        #print()
-        #print_options()
         usr_input = input()
-        # usr_input_lst = parse_input(usr_input)
-        # command_input, directory_str, small_input, extra_input = usr_input_lst
         
 
 if __name__ == "__main__":
