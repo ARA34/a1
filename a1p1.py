@@ -1,5 +1,7 @@
 from pathlib import Path
+import re
 # /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
+# L /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder -r -f
 
 
 def recur_dir_r(directory: Path, usr_input = ""):
@@ -16,6 +18,25 @@ def recur_dir_r(directory: Path, usr_input = ""):
             content += recur_dir_r(path)
     return first_files + content
 
+        
+def recur_dir_r_3(directory: Path):
+    paths = []
+
+    first_files = []
+    for path in directory.iterdir():
+        if path.is_file():
+            paths.append(path)
+
+    dirs = []
+    for path in directory.iterdir():
+        if path.is_dir():
+            dirs.append(path)
+
+    for path in dirs:
+        paths.append(path)
+        paths.extend(recur_dir_r_3(path))
+    return paths 
+
 
 def recur_dir_s(directory: Path, given_name):
     content = ""
@@ -29,11 +50,11 @@ def recur_dir_s(directory: Path, given_name):
 
 
 def command_L(dir: Path, ltr_command, xtr_input):
-    print("Options of the 'L' command:")
-    print("\t-r Output directory content recursively.")
-    print("\t-f Output only files, excluding directories in the results.")
-    print("\t-s Output only files that match a given file name.")
-    print("\t-e Output only files that match a given file extension.\n")
+    # print("Options of the 'L' command:")
+    # print("\t-r Output directory content recursively.")
+    # print("\t-f Output only files, excluding directories in the results.")
+    # print("\t-s Output only files that match a given file name.")
+    # print("\t-e Output only files that match a given file extension.\n")
     output = ""
 
     directory = dir
@@ -41,15 +62,20 @@ def command_L(dir: Path, ltr_command, xtr_input):
 
     dir_content = []
     for path in directory.iterdir():
-        dir_content.append(path.name)
+        dir_content.append(path)
 
     if ltr_command == "" and xtr_input == "": # if ltr command and xtra_input are empty
         for path in directory.iterdir():
             output += str(path) + "\n"
     elif xtr_input == "":
         if ltr_command == "-r": # r - output directory contents recursively
-            output = recur_dir_r(directory, "1")
-            print(output)
+            output_lst = recur_dir_r_3(directory)
+
+            x = list(map(lambda d: str(d), output_lst))
+            for thing in x:
+                output += thing + "\n"
+            #output = recur_dir_r(directory, "1")
+            #print(f"This is the output: {output}")
         if ltr_command == "-f": # f - output only files(no folders)
             for path in directory.iterdir():
                 if not path.is_dir():
@@ -61,7 +87,10 @@ def command_L(dir: Path, ltr_command, xtr_input):
             for path in directory.iterdir():
                 if path.suffix == xtr_input:
                     output += str(path)
-    return output
+        
+    return output.strip()
+
+
 
 def command_C(directory: Path, ltr_input, filename):
     print("Options of the 'C' command:")
@@ -83,15 +112,17 @@ def command_D(file_dir: Path):
         print("ERROR")
 
 def command_R(file_dir: Path):
+    contents = ""
     if file_dir.suffix != ".dsu":
-        print("ERROR")
+        contents = "ERROR"
     elif len(file_dir.read_text()) != 0:
         print(str(file_dir))
-        print(file_dir.read_text())
+        contents = file_dir.read_text().strip()
     else:
-        print("EMPTY")
+        contents = "EMPTY"
+    return contents
 
-def print_start_options():
+def print_options():
     print("Welcome to a1 file management tool!")
     print("Your options are:")
     print("L - List the contents of the user specified directory.")
@@ -100,48 +131,84 @@ def print_start_options():
     print("R - Read the contents of a file.")
     print("Q - Quit the program.")
 
+def parse_input(input:str):
+    # can't split by whitespace because of folders that have white spaces
+    # C /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder -n something
+    
+    command_letter = input[0]
+    
+    allowed_sub_letters  = ["-r","-f","-s","-e","-n"]
+    # Letter command, directory, extra things
+    rest_input = input[2:]
+    directory_input = ""
+    small_input = ""
+    extra_input = ""
+
+    
+
+    some_str = rest_input
+
+    input_lst = some_str.split()
+
+
+    for sub_letter in allowed_sub_letters:
+        if sub_letter in input_lst:
+            small_input = sub_letter
+            input_lst.remove(sub_letter)
+            extra_input = input_lst[-1].strip()
+            input_lst.remove(input_lst[-1])
+    
+    directory_input = " ".join(input_lst)
+
+    directory_input = " ".join(input_lst)
+    if directory_input == "":
+        directory_input = extra_input
+        extra_input = ""
+
+    output_lst = [command_letter, directory_input, small_input, extra_input]
+
+    return output_lst
+        
 
 def main():
+    usr_input = input()
+    usr_input_lst = parse_input(usr_input)
+    command_input = usr_input_lst[0] 
+    directory_str = usr_input_lst[1]
+    small_input = usr_input_lst[2]
+    extra_input = usr_input_lst[3]
 
-    print_start_options()
-    user_input = input().split()
-    command_input = user_input[0]
+    allowed_sub_letters  = ["-r","-f","-s","-e","-n"]
+
     while command_input != "Q":
-        directory_input = user_input[1]
-        directory_path = Path(directory_input)
-        if len(user_input) == 4:
-            letter_command = user_input[2]
-            extra_input = user_input[3]
-        elif len(user_input) == 3:
-            letter_command = user_input[2]
-            extra_input=""
-        else:
-            letter_command=""
-            extra_input=""
+        directory_path = Path(directory_str)
         if command_input == "L":
-            print(command_L(directory_path, letter_command, extra_input))
+            # if (small_input and extra_input) in allowed_sub_letters:
+            #     # there are two commands,take action
+            #     output = ""
+            #     recur_str = command_L(directory_path, "-r","")
+            #     splitlst = recur_str.split("\n")
+            #     x = list(map(lambda p: Path(p), splitlst))
+            #     y = list(filter(lambda s: not s.is_dir(), x))
+            #     for thing in y:
+            #         output += str(thing) + "\n"
+            #     print(output.strip())
+            # else:
+            print(f"user in: {command_input, directory_str, small_input, extra_input}")
+            print(command_L(directory_path, small_input, extra_input))
         elif command_input == "C":
-            if len(user_input) != 4:
-                print("You need to specifiy what option, and what file.")
-            else:
-                print(command_C(directory_path, letter_command, extra_input))
+            print(command_C(directory_path, small_input, extra_input))
         elif command_input == "D":
-            if len(user_input) != 2:
-                print("Inufficient inputs recieved.")
-            else:
-                command_D(directory_path)
+            command_D(directory_path)
         elif command_input == "R":
-            if len(user_input) != 2:
-                print("Inufficient inputs recieved.")
-            else:
-                command_R(directory_path)
+            print(command_R(directory_path))
 
-        print()
-        print_start_options()
-        user_input = input().split()
-        command_input = user_input[0]
-        print()
-
+        #print()
+        #print_options()
+        usr_input = input()
+        # usr_input_lst = parse_input(usr_input)
+        # command_input, directory_str, small_input, extra_input = usr_input_lst
+        
 
 if __name__ == "__main__":
     main()
