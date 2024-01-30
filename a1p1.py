@@ -169,6 +169,8 @@ def main():
             print(command_R(directory_path))
 
         usr_input = input()
+        usr_input_lst = parse_input(usr_input)
+        command_input = usr_input_lst[0]
         
 
 if __name__ == "__main__":
