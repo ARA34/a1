@@ -4,13 +4,12 @@
 
 # Replace the following placeholders with your information.
 
-# NAME
-# EMAIL
+# Alex Reyes Aranda
+# areyesar@uci.edu
 # STUDENT ID
 from pathlib import Path
-# /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
-# L /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
-        
+
+
 def recur_dir(directory: Path):
     # input: directory
     # output: list of paths
@@ -27,6 +26,7 @@ def recur_dir(directory: Path):
         paths.append(path)
         paths.extend(recur_dir(path))
     return paths 
+
 
 def paths_to_strs(path_list:list):
     # input: list of paths
@@ -110,6 +110,7 @@ def command_C(directory: Path, subs, filename):
         output = "ERROR"
     return output
 
+
 def command_D(file_dir: Path):
     if file_dir.exists() and file_dir.suffix == ".dsu":
         str_file = str(file_dir)
@@ -117,6 +118,7 @@ def command_D(file_dir: Path):
         print(str_file + " DELETED")
     else:
         print("ERROR")
+
 
 def command_R(file_dir: Path):
     contents = ""
@@ -159,12 +161,8 @@ def parse_input(input:str):
 
     return output_lst
 
+
 def parse_input_2(input:str):
-    # L dir -r (3)
-    # L dir (2)
-    # C dir -n something (4) dir dir2 something 
-    # L dir -r -e dsu (5)
-    # L dir -r -f
     input_list = []
 
     command_letter = ""
@@ -179,7 +177,6 @@ def parse_input_2(input:str):
     remaining_lst = remaining_str.split() # a list of subsections without the first letter
 
     subs = list(filter(lambda s: s in allowed_subs, remaining_lst))
-
 
     for i in range(len(remaining_lst)):
         try:
@@ -215,7 +212,6 @@ def parse_input_2(input:str):
         
 
 def main():
-    # did not have time to implement the multiple commands input
     usr_input = input()
     command_input, directory_input, subs, extra = parse_input_2(usr_input)
 
@@ -235,7 +231,6 @@ def main():
 
         usr_input = input()
         command_input, directory_input, subs, extra = parse_input_2(usr_input)
-        
         
 
 if __name__ == "__main__":
