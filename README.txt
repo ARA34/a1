@@ -4,9 +4,6 @@ areyesar@uci.edu
 This program takes an input in the specified format of [COMMAND] [INPUT] [[-]OPTION] [INPUT]
 and outputs a filtered list of files and directories on the terminal determined by the specific commands.
 
-I did not have enough time to implement mutliple specific inputs as valid inputs.
-Although my recursive function was working fine, it did not pass the autograder for some odd reason.
-
 Program Command
     L - List the contents of the user specified directory.
     C - Create a new file in specified directory.

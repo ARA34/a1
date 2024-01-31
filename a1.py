@@ -1,3 +1,12 @@
+# a1.py
+
+# Starter code for assignment 1 in ICS 32 Programming with Software Libraries in Python
+
+# Replace the following placeholders with your information.
+
+# NAME
+# EMAIL
+# STUDENT ID
 from pathlib import Path
 # /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
 # L /Users/alexra/Documents/UCI_Winter_2023/ICS_32/test_folder
@@ -91,14 +100,15 @@ def command_L(directory: Path, subs: list, extra_input: str):
 
 
 def command_C(directory: Path, subs, filename):
+    output = ""
     if "-n" in subs:
         filename_dsu = filename + ".dsu"
         file = directory/filename_dsu
         file.touch()
-        return str(file)
+        output = str(file)
     else:
-        print("incorrect input. Try again")
-        return
+        output = "ERROR"
+    return output
 
 def command_D(file_dir: Path):
     if file_dir.exists() and file_dir.suffix == ".dsu":
@@ -113,7 +123,6 @@ def command_R(file_dir: Path):
     if file_dir.suffix != ".dsu":
         contents = "ERROR"
     elif len(file_dir.read_text()) != 0:
-        print(str(file_dir))
         contents = file_dir.read_text().strip()
     else:
         contents = "EMPTY"
@@ -211,6 +220,9 @@ def main():
     command_input, directory_input, subs, extra = parse_input_2(usr_input)
 
     while command_input != "Q":
+        if len(usr_input) == 1:
+            print("ERROR")
+            return
         directory_path = Path(directory_input)
         if command_input == "L":
             print(command_L(directory_path, subs, extra))
